@@ -1,0 +1,28 @@
+pipeline {
+    agent any
+
+    environment {
+        AWS_CREDENTIALS_ID = 'aws-creds'  // ID of your AWS credentials stored in Jenkins
+    }
+
+    stages {
+        stage('Deploy to Kubernetes') {
+            steps {
+                script {
+                    // Authenticate with AWS using the credentials
+                    withCredentials([aws(credentialsId: "${AWS_CREDENTIALS_ID}"]) {
+                        
+                        // Configure kubeconfig for EKS using AWS CLI
+                        sh """
+                        aws eks --region us-east-1 update-kubeconfig --name testamazon
+                        """
+
+                        // Apply the Kubernetes Deployment and Service YAMLs
+                        sh 'kubectl apply -f deployment.yaml'   // Path to your deployment.yaml file
+                        sh 'kubectl apply -f service.yaml'   // Path to your service.yaml file
+                    }
+                }
+            }
+        }
+   }
+}
