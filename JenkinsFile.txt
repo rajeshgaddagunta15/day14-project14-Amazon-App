@@ -18,8 +18,8 @@ pipeline {
                         """
 
                         // Apply the Kubernetes Deployment and Service YAMLs
-                        sh 'kubectl apply -f deployment.yaml'   // Path to your deployment.yaml file
-                        sh 'kubectl apply -f service.yaml'   // Path to your service.yaml file
+                        sh 'kubectl apply -f deployment.yml'   // Path to your deployment.yaml file
+                        sh 'kubectl apply -f service.yml'   // Path to your service.yaml file
                     }
                 }
             }
