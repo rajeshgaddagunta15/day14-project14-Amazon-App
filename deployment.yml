@@ -6,14 +6,14 @@ spec:
   replicas: 1  # Number of desired replicas
   selector:
     matchLabels:
-      app: amazon
+      app: amazon1
   template:
     metadata:
       labels:
-        app: amazon
+        app: amazon1
     spec:
       containers:
-      - name: amazon
+      - name: amazon1
         image: rajeshgadda/amazon:latest
         ports:
         - containerPort: 3000  # Port your application listens on
