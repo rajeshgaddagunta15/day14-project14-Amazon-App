@@ -41,13 +41,6 @@ pipeline {
                 sh "npm install"
             }
         }
-        stage('OWASP Dependency Scan') {
-            steps {
-                dependencyCheck additionalArguments: '--scan ./ --disableYarnAudit --disableNodeAudit', odcInstallation: 'DP-Check'
-                dependencyCheckPublisher pattern: '**/dependency-check-report.xml'
-            }
-        }
-
         stage('Trivy File System Scan') {
             steps {
                 sh "trivy fs . > trivyfs.txt"
