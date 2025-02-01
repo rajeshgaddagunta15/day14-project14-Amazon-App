@@ -6,6 +6,7 @@ pipeline {
     }
     environment {
         SCANNER_HOME = tool 'sonar-scanner'
+        AWS_CREDENTIALS_ID = 'aws-creds'
     }
     stages {
         stage('Clean Workspace') {
@@ -62,10 +63,19 @@ pipeline {
                 sh "trivy image rajeshgadda/amazon:latest > trivyimage.txt"
             }
         }
-        stage('Deploy to Container') {
+      stage('Deploy to Kubernetes') {
             steps {
-                sh 'docker run -d --name amazon2 -p 3000:3000 rajeshgadda/amazon:latest'
-            }
-        }
+                script {
+                    // Authenticate with AWS using the credentials
+                    withCredentials([aws(credentialsId: "${AWS_CREDENTIALS_ID}", accessKeyVariable: 'AWS_ACCESS_KEY_ID', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY')]) {
+                        // Configure kubeconfig for EKS using AWS CLI
+                        sh 'aws eks --region us-east-1 update-kubeconfig --name <cluster-name>'
+
+                        // Apply the Kubernetes Deployment and Service YAMLs
+                        sh 'kubectl apply -f deployment.yaml'
+                        sh 'kubectl apply -f k8s/service.yaml'
+                    }
+                }
+            } 
     }
 }
