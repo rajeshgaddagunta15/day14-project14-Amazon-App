@@ -4,7 +4,7 @@ metadata:
   name: amazon-service
 spec:
   selector:
-    app: amazon
+    app: amazon1
   ports:
     - protocol: TCP
       port: 80  # Port exposed by the service externally (outside the cluster)
